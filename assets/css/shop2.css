@@ -1,0 +1,148 @@
+﻿
+
+.product-image-wrapper{
+	overflow: hidden;
+}
+
+.single-products {
+  position: relative;
+}
+
+.productinfo h2{
+	color:  #4d4d4d;
+	font-family: 'Roboto', sans-serif;
+	font-size: 24px;
+	font-weight: 700;
+}
+.product-overlay h2{
+	color: #fff;
+	font-family: 'Roboto', sans-serif;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+
+.productinfo p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #696763;
+}
+
+.productinfo img{
+  width: 100%;
+}
+
+.productinfo{
+ position:relative;
+}
+
+.product-overlay {
+  background: #4d4d4d;
+  top: 0;
+  display: none;
+  height: 0;
+  position: absolute;
+  transition: height 1s ease 0s;
+  width: 100%;
+  display: block;
+  opacity: 0.9;
+}
+
+.single-products:hover .product-overlay {
+  display:block;
+  height:100%;
+}
+
+
+.product-overlay .overlay-content {
+  bottom: 0;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.product-overlay .add-to-cart {
+  background:#fff;
+  border: 0 none;
+  border-radius: 0;
+  color:  #4d4d4d;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.product-overlay .add-to-cart:hover {
+  background:#fff;
+  color:  #4d4d4d;
+}
+
+
+.product-overlay p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+}
+
+#grey {
+  background: #f5f5f5;
+  margin-top: 0px;
+  padding-top: 40px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+#grey .callout {
+  margin-bottom: 20px;
+}
+
+#grey p {
+  margin-left: 30px;
+  margin-right: 30px;
+  letter-spacing: 1px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+
+
+.add-to-cart {
+  background:#F5F5ED;
+  border: 0 none;
+  border-radius: 0;
+  color: #696763;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.add-to-cart:hover {
+  background:  #4d4d4d;
+  border: 0 none;
+  border-radius: 0;
+  color: #FFFFFF;
+}
+
+.add-to{
+  margin-bottom: 10px;
+}
+
+.add-to-cart i{
+	margin-right:5px;
+}
+
+.add-to-cart:hover {
+  background:  #4d4d4d;
+  color: #FFFFFF;
+}
+
+.logo
+{
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    margin-top: -5px;
+}
+}

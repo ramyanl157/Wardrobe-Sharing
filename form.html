@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="assets/js/jquery.min.js"></script>
+
+    <style>
+        .body{
+            overflow-y: hidden;
+        }
+        .back{
+        font-size:16px;
+        }
+
+        .back:hover{
+        text-decoration: none;
+        color: white;
+        }
+
+        .form-group{
+            font-family: "Raleway";
+        }
+
+        .error{
+            font-family: "Raleway";
+        }
+    </style>
+
+    <script>
+        unique = true;
+
+        function removecolor(){
+            $('#username').css("background-color","");
+            $('#error').html = "";
+            $('#error').hide();
+        }
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function reg(){
+            var sx = document.getElementsByName('gender');
+            for (var i = 0; i < 2; i++) 
+            {
+                if (sx[i].checked) {
+                    sex = sx[i].value
+                    break;
+                }
+            }
+            var data = {
+                "username" : $('#username').val(),
+                "phone" : $('#phone').val(),
+                "sex" : sex,
+                "address" : $('#address1').val() + ', ' + $('#address2').val()  + ', ' + $('#address3').val() + ', ' + $('#zip').val() ,
+                "name" : readCookie('user')
+
+            }
+
+            $.ajax({
+                type : "GET",
+                url: "http://localhost:3000/updateuser",
+                dataType:"json",
+                data: data,
+
+                success: function(obj){
+                    if(obj.status == "success"){
+                        window.location = "http://localhost/wt/index.html";
+                    }
+                    else{
+                        alert("Oops! Something went wrong.");
+                    }
+                }
+            })
+        }
+        function check()
+        {
+            var un = document.getElementById('username').value;
+            data = {"username" : un};
+            $.ajax({
+                type : "GET",
+                url: "http://localhost:3000/checkusername",
+                dataType:"json",
+                data: data,
+
+                success: function(obj){
+                    if(obj.status == "exists"){
+                        $('#username').css("background-color","#ff3232");
+                        $('#error').html = "User-Name Already Exists, Re-enter";
+                        unique = false;
+                    }
+                }
+            })
+        }
+    </script>    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'> 
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/animate.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="loginColumns animated fadeInDown">
+    <div class="row">
+
+        <div class="col-md-12">
+            <p class = "logintext2">Just a few More Details...</p>
+        </div>
+        <div class="col-md-12">
+            <div class="wrappingbox">
+                    
+                        <div class="form-group">
+                            <input id="username" class="form-control" placeholder="Enter A User-Name, The User-Name Must Be Unique" onblur = "check()" onfocus = "removecolor()" required>
+                        </div>
+                        <div id = "error" class = "error">
+                        </div>
+                        <div class="form-group">
+                            <input id="phone" type="text" class="form-control" placeholder="Phone Number" required>
+                        </div>
+                    <div class = "form-group">
+                        <span class="radio">
+                            <label><input type="radio" name="gender" value="male">Male</label>
+                        </span>
+                        <span class="radio">
+                            <label><input type="radio" name="gender" value="female">Female</label>
+                        </span>
+                    </div>
+                        <hr>
+                        <div class="form-group">
+                            <input id="address1" type="text" class="form-control" placeholder="Address Line 1" required="">
+                        </div>
+                        <div class="form-group">
+                            <input id="address2" type="text" class="form-control" placeholder="Address Line 2" required="">
+                        </div>
+                        <div class="form-group">
+                            <input id="address3" type="text" class="form-control" placeholder="Address Line 3" required="">
+                        </div>
+                        <div class="form-group">
+                            <input id="zip" type="text" class="form-control" placeholder="Zip" required="">
+                        </div>
+                        <!-- <div id = "pcheck" hidden = true> Password Mismatch</div> -->
+                        <button id="sub" onclick='reg()' type="submit" class="btn btn-primary btn-block" >Register</button>
+                        <br>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

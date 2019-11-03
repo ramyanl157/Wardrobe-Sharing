@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+	<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/icomoon.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link href="assets/css/shop2.css" rel="stylesheet">
+
+	<style>
+		.result {border:1px solid black;}
+	</style>
+
+
+	<script>
+		function request()
+		{
+			category = ""
+			sex = ""
+			var cat = document.getElementsByName('cat');
+			for (var i = 0; i < 6; i++) 
+			{
+			    if (cat[i].checked) {
+					category = cat[i].value
+			        break;
+	   			}
+			}
+
+			var sx = document.getElementsByName('sex');
+			for (var i = 0; i < 2; i++) 
+			{
+			    if (sx[i].checked) {
+					sex = sx[i].value
+			        break;
+	   			}
+			}
+
+
+			var colorboxes = document.getElementsByName('color');
+			var colorChecked = [];
+			for (var i=0; i<colorboxes.length; i++) {
+			    if (colorboxes[i].checked) {
+			        colorChecked.push(colorboxes[i].value);
+			    }
+			}
+
+			var sizeboxes = document.getElementsByName('size');
+			var sizeChecked = [];
+			for (var i=0; i<sizeboxes.length; i++) {
+			    if (sizeboxes[i].checked) {
+			        sizeChecked.push(sizeboxes[i].value);
+			    }
+			}
+
+			colorChecked = JSON.stringify(colorChecked);
+			sizeChecked = JSON.stringify(sizeChecked);
+
+			find = {
+				'category':category,
+				'sex':sex,
+				'color':colorChecked,
+				'size':sizeChecked
+			}
+
+			console.log(find)
+		
+
+
+		// $.ajax({
+  //           type: 'GET',
+  //           url:"http://localhost:3000/clothes",
+  //           dataType:"json",
+  //           data: find,
+  //           crossDomain:true,
+  //           success: appendClothes,
+  //           error:function(jqXHR,textStatus,errorThrown ){
+  //               console.log(jqXHR);
+  //               console.log(textStatus);
+  //               console.log(errorThrown);
+  //               console.log("Sorry! Something went wrong. Try Again!");
+  //           	}
+		// 	})
+
+		}
+
+		function appendClothes()
+		{
+			alert("hello")
+		}
+
+		timer = null
+		xhr = new XMLHttpRequest();
+
+		function getBrand()
+		{
+			if(timer)
+			{clearTimeout(timer);}
+			timer = setTimeout(sendTerm, 1000);
+		}
+
+		function sendTerm()
+		{
+			term = document.getElementById("brand").value;
+			console.log(term);
+			// document.getElementById("food").className = "to_white";
+			if(term == "") {document.getElementById("outputs").innerHTML = "";}
+			else
+			{
+				// url = "http://localhost:3000/fetchBrands?term="+term;
+				url = "http://localhost/hoogabooga/suggest.php?term="+term;
+				// if(localStorage.getItem(url))
+				// 	populateBrands(JSON.parse(localStorage.getItem(url)))
+				// else
+				// {
+					xhr.onreadystatechange = displayBrands;
+					xhr.open("GET", url, true);
+					xhr.send();
+				// }
+			}
+		}
+
+
+		function displayBrands()
+		{
+			if(xhr.status == 200 && xhr.readyState == 4)
+			{
+				// console.log("uo")
+				var res = JSON.parse(xhr.responseText);
+				// alert(res)
+				if(res.length == 0) 
+				{
+					// document.getElementById("food").className = "to_red";
+					document.getElementById("output").innerHTML = "";
+				}
+				else
+				{
+					// localStorage.setItem(responseURL, responseText);
+					populateBrands(res);
+				}
+			}
+		}
+
+		function populateBrands(r)
+		{
+			output = document.getElementById("outputs");
+			output.innerHTML = "";
+			for(var i = 0;i<r.length;i++)
+			{
+				var d = document.createElement("div");
+				d.className = "result";
+				d.innerHTML = r[i];
+				output.appendChild(d);
+			}
+		}
+
+	</script>
+	
+</head>
+
+<body onload = request()>
+
+	 <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style = "background-color:transparent">
+                    <img src = "assets/img/jacket.svg" class = "logo1">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-xs hidden-sm" href="index.html"><img src = "assets/img/jacket.svg" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#home" class="smoothScroll">Home</a></li>
+                        <li> <a href="#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="#contact" class="smoothScroll"> Contact</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="login.html" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li><a href="signup.html" class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- <header id="header">
+
+	<div id="navbar-main">
+   
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+        
+				<div class="navbar-header">
+
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon icon-shield" style="font-size:30px; color:#3498db;">
+					</span>
+					</button>
+					<a class="navbar-brand hidden-xs hidden-sm" href="#home"><span class="icon icon-shield" style="font-size:18px; color:#3498db;"></span></a>
+				</div>
+
+
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="#home" class="smoothScroll">Home</a></li>
+						<li> <a href="#about" class="smoothScroll"> About</a></li>
+						<li> <a href="#services" class="smoothScroll"> Services</a></li>
+						<li> <a href="#contact" class="smoothScroll"> Contact</a></li>
+					</ul>
+					<div class = "navbar-collapse collapse navbar-right">
+						<ul class="nav navbar-nav">
+							<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+							<li><a href="signup.html"><i class="fa fa-lock"></i> Sign Out</a></li>
+						</ul>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+    </div>
+
+	</header> -->
+	
+	<section>
+		<br>
+		<br>
+		<br>
+		<div class="container">
+			<div class = "row">
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<br>
+						<br>
+						<div class="panel-group category-products" id="accordian">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+											
+										<a data-toggle="collapse" data-parent="#accordian" href="#categories">
+											
+											Categories
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+										</a>
+										
+									</h4>
+								</div>
+								<div id="categories" class="panel-collapse collapse" >
+									<div class="panel-body">
+											<div class="radio">
+											  <label><input type="radio" id = "cat1" onclick="request()" name = "cat" value="T-Shirt" checked="checked">T-Shirts</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" id = "cat2" onclick="request()" name = "cat" value="Shirt">Shirts</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" id = "cat3" onclick="request()" name = "cat" value="Dress">Dress</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" id = "cat4" onclick="request()" name = "cat" value="Blazer">Blazer</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" id = "cat5" onclick="request()" name = "cat" value="Jeans">Jeans</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" id = "cat6" onclick="request()" name = "cat" value="Trouser">Trouser</label>
+											</div>
+											
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										<a data-toggle="collapse" data-parent="#accordian" href="#colours">
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+											Colours
+										</a>
+										
+									</h4>
+								</div>
+								<div id="colours" class = "panel-collapse collapse">
+									<div class="panel-body">
+									
+											<div class="checkbox">
+												<label><input type="checkbox" value="red" id = "color1" onclick="request()" name = "color">Red</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="blue" id = "color2" onclick="request()" name = "color">Blue</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="yellow" id = "color3" onclick="request()" name = "color">Yellow</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="black" id = "color4" onclick="request()" name = "color">Black</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="white" id = "color5" onclick="request()" name = "color">White</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="green" id = "color6" onclick="request()" name = "color">Green</label>
+											</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default" id = "size-lms">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										<a data-toggle="collapse" data-parent="#accordian" href="#size">
+											Size
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+
+										</a>
+										
+										
+									</h4>
+								</div>
+								<div id="size" class = "panel-collapse collapse">
+									<div class="panel-body">
+									
+											<div class="checkbox">
+												<label><input type="checkbox" value="s" id = "size1" onclick="request()" name = "size">S</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="m" id = "size2" onclick="request()" name = "size">M</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="l" id = "size3" onclick="request()" name = "size">L</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="xl" id = "size4" onclick="request()" name = "size">XL</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="xxl" id = "size5" onclick="request()" name = "size">XXL</label>
+											</div>
+											
+									</div>
+								</div>
+							</div>
+							
+							<!-- <div class="panel panel-default" id = "size-numbers" style = "display: none">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+												Sizes
+										
+									</h4>
+								</div>
+								<div id="size">
+									<div class="panel-body">
+									
+											<div class="checkbox">
+												<label><input type="checkbox" value="4">4</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="5">5</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="6">6</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="7">7</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="8">8</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="9">9</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="10">10</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="11">11</label>
+											</div>
+											
+											
+									</div>
+								</div>
+							</div>
+		 -->  <!-- shoes-->
+							
+							
+							<div class="panel panel-default" id = "size-lms">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										<a data-toggle="collapse" data-parent="#accordian" href="#sex">
+											Sex
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+
+										</a>
+										
+										
+									</h4>
+								</div>
+
+								<div id="sex" class = "panel-collapse collapse">
+									<div class="panel-body">
+									
+											<div class="radio">
+												<label><input type="radio" value="F" id = "sex1" onclick="request()" name = "sex" checked="checked">Female</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="M" id = "sex2" onclick="request()" name = "sex">Male</label>
+											</div>
+											
+											
+									</div>
+								</div>
+							</div>
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										Brand
+										
+									</h4>
+								</div>
+								<div id="price">
+									<div class="panel-body">
+										<table border = "0" cellpadding = "0">
+											<tr>
+												<td>
+													<input id="brand" type="text" class="form-control" name="brand" placeholder="Select your brand" onkeyup = "getBrand()">
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<div id = "outputs"></div>
+												</td>
+											</tr>
+
+										</table>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>	
+				</div>
+			
+				<div class = "col-sm-9">
+					<div class="features_items" id = "feature_items">
+						<br>
+						<br>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product1.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product2.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product3.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product4.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product4.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product1.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div> 
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product2.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product3.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product4.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product1.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+
+						<div class="col-sm-3">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="products/product1.PNG" alt="" />
+										<h2>$56</h2>
+										<p>Easy Polo Black Edition</p>
+										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
+									<div class="product-overlay">
+										<div class="overlay-content">
+											<h2>$56</h2>
+											<p>Easy Polo Black Edition</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	
+	
+	
+	
+</body>
+
+</html>

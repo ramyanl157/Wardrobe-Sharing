@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wardrobe Sharing</title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>  
+    <link href="assets/css/wow.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>     
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+
+    <script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+
+
+    <script>
+
+        $(document).ready(function(){
+            user = readCookie('user');
+                console.log(user);
+                if(user){
+                $('#logout').css("display","");
+                $('#hey').css("display","");
+                $('#shopping').css("display","");
+
+                document.getElementById('hi').innerHTML += " "+user;
+                }
+                else{
+                    $('#login').css("display","");
+                    $('#signup').css("display","");
+                }
+                datax = [];
+                for (var i = 0; i < localStorage.length; i++) {
+
+                    var item = localStorage.getItem(localStorage.key(i));
+                    console.log(item);
+                    var value = localStorage.getItem(localStorage.key(i));
+                    val = value.split(",");
+                    // var sitem = item.split("_");
+                    var itemId = val[0];
+                    console.log(itemId);
+                    finalcost = 0;
+                    datax[i] = {
+                        "itemID": itemId,
+                    }
+                    $.ajax({
+                    url: "http://localhost:3000/product",
+                    type:"GET",
+                    dataType:"json",
+                    data: {itemID:itemId},
+                    success: function(res){
+                        console.log(res);
+                        res = res[0];
+                        var a = document.createElement('tr');
+                        var b = document.createElement('td');
+                        b.className = "col-sm-8 col-md-6";
+                        var c = document.createElement('div');
+                        c.className = "media";
+                        var d = document.createElement("a");
+                        d.className = "thumbnail pull-left";
+                        d.href = "#";
+                        var e = document.createElement("img");
+                        e.className = "media-object";
+                        e.src = "products/"+res.image;
+                        e.width = "72";
+                        e.height = "72";
+                        d.appendChild(e);
+                        c.appendChild(d);
+                        var f = document.createElement("div");
+                        f.className = "media-body";
+                        var g = document.createElement("h4");
+                        g.className = "media-heading";
+                        g.innerHTML = res.brand + " " + res.color + " " + res.category;
+                        f.appendChild(g);
+                        c.appendChild(f);
+                        b.appendChild(c);
+                        a.appendChild(b);
+
+                        var h = document.createElement("td");
+                        h.className = "col-sm-1 col-md-1 text-center";
+                        h.innerHTML = val[1];
+                        a.appendChild(h);
+
+                        var h = document.createElement("td");
+                        h.className = "col-sm-1 col-md-1 text-center "+res.itemID ;
+                        h.innerHTML = val[2];
+                        // h.id = res.itemID;
+                        finalcost += parseInt(val[2]);
+                        a.appendChild(h);
+
+                        var h = document.createElement("td");
+                        h.className = "col-sm-1 col-md-1 ";
+                        var z = document.createElement("button");
+                        z.id = res.itemID;
+                        z.className = "btn btn-danger delete mini btn red-stripe";
+                        var y = document.createElement("span");
+                        y.className = "glyphicon glyphicon-remove";
+                        y.innerHTML = "Remove";
+                        z.appendChild(y);
+                        h.appendChild(z);
+                        a.appendChild(h);
+
+                        document.getElementById('table1').appendChild(a);
+                        document.getElementById('finalCost').innerHTML = finalcost;
+
+                        
+                    },
+                    error: function(jqXHR,textStatus,errorThrown ){
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        console.log("Sorry! Something went wrong. Try Again!");
+                        }
+                    })
+
+                };
+                console.log(datax);
+
+
+
+
+        })
+        $(document).on("click",".delete", function (e) {
+        e.preventdefault;
+        var x = this.id;        
+        var p = document.getElementById('finalCost');
+        // alert(p)
+        var xj = document.getElementsByClassName(x);
+        // alert(xj[0].innerHTML);
+        p.innerHTML = parseInt(p.innerHTML) - parseInt(xj[0].innerHTML);
+        localStorage.removeItem("hoogabooga_"+x);
+        $(this).parent().parent().fadeOut(300);
+
+
+        });
+
+        function delete_cookie( name ) {
+              document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function logout(){
+            console.log("cookie");
+            delete_cookie('user');
+            delete_cookie('item');
+            window.location.href = "http://localhost/wt/index.html"
+        }
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function cont(){
+            window.location = "http://localhost/wt/shop2.html";
+        }
+
+
+        function checkout(){
+            var userId = readCookie('user');
+            alert(userId);
+            var date = val[1].split("<br>");
+            var datefrom = date[0];
+            var orderId = "O10HB0098" + Math.floor(Math.random()*5) + Math.floor(Math.random()*7);
+            var dateto = date[1];
+            var data = {
+                "userID":userId ,
+                "dateto" : dateto,
+                "datefrom" : datefrom,
+                "orderID": orderId
+            }
+
+
+            $.ajax({
+                url : "http://localhost:3000/addorder",
+                type: "GET",
+                dataType:"json",
+                data: data,
+                success:function(result){
+                    if(result.status == "success"){
+                        alert("Order Placed");
+                        window.location ="http://localhost/wt/track.html";
+                    }
+
+                },
+                error:function(){
+                    console.log("Error");
+                }
+            });
+            alert(datax);
+            localStorage.clear();
+            $.ajax({
+                url : "http://localhost:3000/changeStatus",
+                type: "GET",
+                dataType:"json",
+                data: JSON.stringify(datax),
+                success:function(result){
+                    if(result.status == "success"){
+                        alert("Order sucess");
+                        // window.location("http://localhost/wt/track.html");
+                    }
+
+                },
+                error:function(){
+                    console.log("Error");
+                }
+            })
+        }
+
+
+
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style = "background-color:transparent">
+                    <img src = "assets/img/logo.png" class = "logo1">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-xs hidden-sm" href="index.html"><img src = "assets/img/logo.png" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://localhost/wt/index.html" class="smoothScroll">Home</a></li>
+                        <li> <a href="http://localhost/wt/index.html#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="http://localhost/wt/index.html#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="http://localhost/wt/index.html" class="smoothScroll"> Contact</a></li>
+                        <li><a href="cart.html">My Bag</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                       <li style="display:none" id = "login" ><a href="login.html"  class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li style="display:none" id = "signup" ><a href="signup.html"  class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                        <li style="display:none" id = "hey"><a id = "hi" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Hey</a></li>
+                        <li style="display:none" id = "logout" onclick="logout()"><a class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Logout</a></li>
+                        <li style="display:none" id = "shopping"><i class="fa fa-shopping-bag" aria-hidden="true"></i><a id = "bag" class="smoothScroll"></a></li>
+                    </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "bagtitle centered"><h1>My Bag</h1>
+    <hr></div>
+    <br>
+    <br>
+    <br>
+
+    <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Selected Dates</th>
+                        <th class="text-center">Price</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody id = "table1">
+                    <!-- <tr>
+                        <td class="col-sm-8 col-md-6">
+                        <div class="media">
+                            <a class="thumbnail pull-left" href="#"> <img class="media-object" id = 'product1' src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 72px; height: 72px;"> </a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">Product name</a></h4>
+                                <h5 class="media-heading"> by <a href="#">Brand name</a></h5>
+                                <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
+                            </div>
+                        </div>
+                        </td>
+                        
+                     
+                        
+                        <td class="col-sm-1 col-md-1 text-center"><strong>$4.87</strong></td>
+                        
+                        <td class="col-sm-1 col-md-1">
+                        <button type="button" class="btn btn-danger delete btn mini red-stripe" onclick = "del()">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                        </td>
+                    </tr> -->
+                </tbody>
+		
+                <tfoot>
+                    <tr>
+                        
+                        <td><h3>Total</h3></td>
+                        <td class="text-right"><h3 id = 'finalCost'></h3></td>
+                    </tr>
+                    <tr>
+                        <td>   </td>
+                        <td>
+                        <button type="button" onclick="cont()" class="btn btn-default">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                        </button></td>
+                        <td>
+                        <button type="button" onclick="checkout()" class="btn btn-success">
+                            Checkout <span class="glyphicon glyphicon-play"></span>
+                        </button></td>
+                    </tr>
+                </tfoot>
+            </table>
+		</div>
+    </div>
+</div>
+
+  </body>
+
+</html>

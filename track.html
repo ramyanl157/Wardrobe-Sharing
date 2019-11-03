@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wardrobe Sharing</title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>  
+    <link href="assets/css/wow.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>     
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+
+    <script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+
+    <style>
+        .statustext{
+            color: #d3d3d3;
+        }
+
+        .makebig{
+            padding-top: 50px;
+        }
+
+
+    </style>
+        <script>
+
+
+         function readCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+            $(document).ready(function(){
+                    user = readCookie('user');
+                    console.log(user);
+                    if(user){
+                    $('#logout').css("display","");
+                    $('#hey').css("display","");
+                    document.getElementById('hi').innerHTML += " "+user;
+                    }
+                    else{
+                        $('#login').css("display","");
+                        $('#signup').css("display","");
+                    }
+
+
+                    var data = {'userID' : readCookie('user')};
+                    $.ajax({
+                    	url : "http://localhost:3000/getOrderID",
+                    	type: "GET",
+                    	dataType:"json",
+                    	data : data,
+                    	success : function(res){
+                    		document.getElementById('orderid').innerHTML = res.orderID;
+                       	}
+                    })
+            })
+
+            function delete_cookie( name ) {
+                  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            }
+
+            function logout(){
+                console.log("cookie");
+                delete_cookie('user');
+                location.reload(true);
+            }
+        var rec = 1;
+        function action(){
+            xhr = new XMLHttpRequest();
+            xhr.open("GET", "trackfile.php", true);
+            xhr.onreadystatechange = colorchange;
+            xhr.send();
+        }
+
+        function colorchange(){
+            if(xhr.readyState == 3 && xhr.status == 200)
+            {
+                var x = document.getElementById(rec);
+                x.src = rec + ".png";
+                var y = document.getElementById("st"+rec)
+                y.style.color = "#3d3d3d";
+                rec++;
+            }
+
+            if(xhr.readyState == 4 && xhr.status == 200)
+            {
+                xhr.abort();
+            }
+        }
+        </script>
+    </head>
+
+
+  <body onload = "action()">
+
+    <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style = "background-color:transparent">
+                    <img src = "assets/img/logo.png" class = "logo1">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-sm hidden-sm" href="index.html"><img src = "assets/img/logo.png" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://localhost/wt/index.html" class="smoothScroll">Home</a></li>
+                        <li> <a href="http://localhost/wt/index.html#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="http://localhost/wt/index.html#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="http://localhost/wt/index.html#contact" class="smoothScroll"> Contact</a></li>
+                        <li><a href="cart.html">My Bag</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                       <li style="display:none" id = "login" ><a href="login.html"  class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li style="display:none" id = "signup" ><a href="signup.html"  class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                        <li style="display:none" id = "hey"><a id = "hi" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Hey</a></li>
+                        <li style="display:none" id = "logout" onclick="logout()"><a class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <div id = "grey" class = "shoptitle centered makebig"><h1>Order Summary</h1><hr>
+
+    <br>
+    <br>
+    
+    <!-- <div id = "grey" class = "pushup"> -->
+    <h2>
+        <center>
+            Order ID : 
+        <span id = "orderid">
+        </span>
+    </center>
+    </h2>
+    <br>
+    <br>
+    </div> 
+
+    <br>
+    <br>
+    <div class="container">
+    <div class="row centered">
+        <div class="col-md-2">
+            <img id = "1" src = "11.png" width = "150px" height = "150px">
+            <br>
+            <h3 class = "statustext" id = "st1">Order Recieved</h3> 
+        </div>
+
+        <div class="col-md-2">
+            <img id = "2" src = "22.png" width = "150px" height = "150px">
+            <br>
+            <h3 class = "statustext" id = "st2">Items Recieved</h3> 
+        </div>
+
+
+         <div class="col-md-2">
+            <img id = "3" src = "33.png" width = "150px" height = "150px">
+            <br>
+            <h3 class = "statustext" id = "st3">Dry Cleaned</h3> 
+        </div>
+
+
+         <div class="col-md-2">
+            <img id = "4" src = "44.png" width = "150px" height = "150px">
+            <br>
+            <h3 class = "statustext" id = "st4">Items Packed</h3> 
+        </div>
+
+         <div class="col-md-2">
+            <img id = "5" src = "55.png" width = "150px" height = "150px">
+            <br>
+            <center><h3 class = "statustext" id = "st5">Items Dispatched</h3> </center>
+        </div>
+
+         <div class="col-md-2">
+            <img id = "6" src = "66.png" width = "150px" height = "150px">
+            <br>
+            <center><h3 class = "statustext" id = "st6">Order Delivered</h3><center>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

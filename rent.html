@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wardrobe Sharing</title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>  
+    <link href="assets/css/wow.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>     
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+
+    <script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+    <style>
+    	.result {border:1px solid black;}
+
+
+		h1, h2, h4 {
+      font-family: "Raleway";
+      font-weight: 300;
+      color: #333;
+    }
+
+    .result:hover
+	{
+			background-color: #d3d3d3;
+			cursor: pointer;
+			color: black;
+	}
+    </style>
+    <script>
+    	timer = null;
+    	function getBrand()
+		{
+			if(timer)
+			{clearTimeout(timer);}
+			timer = setTimeout(sendTerm, 1000);
+		}
+		fail = 0;
+		function sendTerm(){
+			var term = document.getElementById("brandin").value
+			if(term == "") {document.getElementById("outputs").innerHTML = "";
+			//request();
+			}
+			if(term != ""){
+				document.getElementById("outputs").innerHTML = "";
+				var data = {'term':document.getElementById("brandin").value};
+				$.ajax({
+					type:"GET",
+					url:"http://localhost:3000/suggest",
+					// url:"suggest.php",
+					data: data,
+					dataType:"json",
+					success: function(res){
+						// var res = JSON.parse(res);
+						// alert(res)
+						console.log(res)
+						if(res.length == 0) 
+						{
+							fail = 1;
+							// document.getElementById("brand").className = "to_red";
+							document.getElementById("outputs").innerHTML = "";
+						}
+						else
+						{
+							// localStorage.setItem(responseURL, responseText);
+							populateBrands(res);
+						}
+					},
+					error: function(jqXHR,textStatus,errorThrown ){
+	                console.log(jqXHR);
+	                console.log(textStatus);
+	                console.log(errorThrown);
+	                console.log("Sorry! Something went wrong. Try Again!");
+	            	}
+
+				})
+			}
+		}
+
+		// function sendTerm()
+		// {
+		// 	term = document.getElementById("brand").value;
+		// 	console.log(term);
+		// 	// document.getElementById("food").className = "to_white";
+		// 	if(term == "") {document.getElementById("outputs").innerHTML = "";}
+		// 	else
+		// 	{
+		// 		// url = "http://localhost:3000/fetchBrands?term="+term;
+		// 		url = "http://localhost/suggest.php?term="+term;
+		// 		// if(localStorage.getItem(url))
+		// 		// 	populateBrands(JSON.parse(localStorage.getItem(url)))
+		// 		// else
+		// 		// {
+		// 			xhr.onreadystatechange = displayBrands;
+		// 			xhr.open("GET", url, true);
+		// 			xhr.send();
+		// 		// }
+		// 	}
+		// }
+
+
+		// function displayBrands()
+		// {
+		// 	if(xhr.status == 200 && xhr.readyState == 4)
+		// 	{
+		// 		// console.log("uo")
+		// 		var res = JSON.parse(xhr.responseText);
+		// 		// alert(res)
+		// 		if(res.length == 0) 
+		// 		{
+		// 			// document.getElementById("food").className = "to_red";
+		// 			document.getElementById("output").innerHTML = "";
+		// 		}
+		// 		else
+		// 		{
+		// 			// localStorage.setItem(responseURL, responseText);
+		// 			populateBrands(res);
+		// 		}
+		// 	}
+		// }
+
+		function populateBrands(r)
+		{
+			output = document.getElementById("outputs");
+			output.innerHTML = "";
+			for(var i = 0;i<r.length;i++)
+			{
+				var d = document.createElement("div");
+				d.className = "result";
+				d.onclick = populatebox;
+				d.innerHTML = r[i];
+				output.appendChild(d);
+			}
+		}
+
+		function populatebox(e)
+		{
+			document.getElementById('brandin').value = e.target.innerHTML;
+			document.getElementById("outputs").innerHTML = "";
+			// request();
+		}
+
+
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style = "background-color:transparent">
+                    <img src = "assets/img/logo.png" class = "logo1">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-xs hidden-sm" href="index.html"><img src = "assets/img/logo.png" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://localhost/wt/index.html#home" class="smoothScroll">Home</a></li>
+                        <li> <a href="http://localhost/wt/index.html#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="http://localhost/wt/index.html#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="http://localhost/wt/index.html#contact" class="smoothScroll"> Contact</a></li>
+                        <li><a href="cart.html">My Bag</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="display:none" id = "login" ><a href="login.html"  class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li style="display:none" id = "signup" ><a href="signup.html"  class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                        <li style="display:none" id = "hey"><a id = "hi" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Hey</a></li>
+                        <li style="display:none" id = "logout" onclick="logout()"><a class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Logout</a></li>
+                        <li style="display:none" id = "shopping"><i class="fa fa-shopping-bag" aria-hidden="true"></i><a id = "bag" class="smoothScroll"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+	<br>
+    <br>
+    <div id = "grey" class = "shoptitle centered makebig"><h1>Rent</h1><hr>
+
+    <br>
+    <br>
+    
+    
+    </div> 
+	
+	<br>
+	
+	<div class="container">
+				<div class = "row">
+
+				<div class="col-sm-7">
+					<br>
+					<br>
+					<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+											
+										<a href="#categories">
+											
+											Categories
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+										</a>
+										
+									</h4>
+								</div>
+								<div id="categories" >
+									<div class="panel-body">
+										<div class = "row">
+											<div class = "col-sm-6">
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "tshirt" value = "T-shirt">T-Shirts</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "shirt" value ="Shirt">Shirts</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "dress" value = "Dress">Dress</label>
+											</div>
+								</div>					
+								<div class = "col-sm-6">
+
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "blazer" value = "Blazer">Blazer</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "jeans" value = "Jeans">Jeans</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" class = "cate" name="cate" id = "trouser" value = "Trouser">Trouser</label>
+											</div >
+										</div>
+								</div>
+											
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							
+							
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										<a href="#colours">
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+											Colours
+										</a>
+										
+									</h4>
+								</div>
+								<div id="colours">
+									<div class="panel-body">
+									<div class = "row">
+									<div class = "col-sm-6">
+											<div class="radio">
+												<label><input type="radio" value="red" name = "color">Red</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="blue" name = "color">Blue</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="yellow" name = "color">Yellow</label>
+											</div>
+									</div>
+									<div class = "col-sm-6">
+
+											<div class="radio">
+												<label><input type="radio" value="black" name = "color">Black</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="white" name = "color">White</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="grey" name = "color">Grey</label>
+											</div>
+									</div>
+									</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default" id = "size-lms">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										<a href="#size">
+											Size
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+
+										</a>
+										
+										
+									</h4>
+								</div>
+								<div id="size" >
+									<div class="panel-body">
+										<div class = "row">
+										<div class = "col-sm-6">
+											<div class="radio">
+												<label><input type="radio" value="S" name = "size">S</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" value="M" name = "size">M</label>
+											</div>
+										</div>									
+										<div class = "col-sm-6">
+
+											<div class="radio">
+											  <label><input type="radio" value="L" name = "size" >L</label>
+											</div>
+											<div class="radio">
+												<label><input type="radio" value="XL" name = "size" >XL</label>
+											</div>
+										</div>
+									</div>										
+											
+									</div>
+								</div>
+							</div>
+							
+							<div class="panel panel-default" id = "size-numbers" style = "display: none">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+												Sizes
+										
+									</h4>
+								</div>
+								<div id="size">
+									<div class="panel-body">
+									
+											<div class="checkbox">
+												<label><input type="checkbox" value="red">4</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="">5</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="">6</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="red">7</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="red">8</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="">9</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" value="">10</label>
+											</div>
+											<div class="checkbox">
+												<label><input type="checkbox" value="red">11</label>
+											</div>
+											
+											
+									</div>
+								</div>
+							</div>
+		
+							
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										
+										Brand
+										
+									</h4>
+								</div>
+								<!-- <div id="brand"> -->
+								<div id="price">
+									<div class="panel-body">
+										<table border = "0" cellpadding = "0">
+											<tr>
+												<td>
+											<div class="panel-body">
+											<input type="text" class="form-control" name="brand" id = "brandin" placeholder="Select your brand" onkeyup = "getBrand()">
+										</td>
+											</tr>
+
+											<tr>
+												<td>
+													<div id = "outputs"></div>
+												</td>
+											</tr>
+
+										</table>
+									</div>
+									</div>
+									<!-- </div -->
+								</div>
+							
+							
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+									
+											
+										
+											Sex
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+										</a>
+										
+									</h4>
+								</div>
+								<div id="sex">
+									<div class="panel-body">
+											<div class="radio">
+											  <label><input type="radio" name="sex" id="female" value = "F">Female</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="sex" id="male" value = "M">Male</label>
+											</div>
+		
+											
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+									
+											
+										
+											Condition
+											<span class = "pull-right"><i class="icon icon-plus"></i></span>
+										</a>
+										
+									</h4>
+								</div>
+								<div id="condition">
+									<div class="panel-body">
+											<div class="radio">
+											  <label><input type="radio" name="condition" id="new" value = "Brand New - Never Worn">Brand New</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="condition" id="old1" value = "Worn a few Times">Worn a Few Times</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="condition" id="old2" value = "Old- Worn Several Times">Old- Worn Several Times</label>
+											</div>
+		
+											
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							
+							
+						</div>
+					</div>	
+					<div class="col-sm-5">
+						<br>
+						<br>
+						
+
+							<label>Upload Image</label>
+								<span class="input-group-btn">
+									<span class="btn btn-default btn-file">
+										<input type="file" id="imgInp">
+									</span>
+								</span>
+							<img id='img-upload'/ style = "width: 19em;height: 18.5em;">
+					</div>
+
+					<div class="col-sm-5">
+						<br>
+						<br>
+						
+
+							<label>Available From</label>
+								
+									
+										<input type="text" placeholder="YYYY-MM-DD" id="datefrom">
+									
+								<br>
+								<br>
+							<label>Available To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								
+									
+										<input type="text" placeholder="YYYY-MM-DD" id="dateto">
+									
+								
+							
+					</div>
+				
+			</div>
+		<div class = "row">
+			<div class="col-sm-12">
+				<input type = "submit"  id = "submit">
+			</div>
+		</div>
+	</div>
+			
+    
+	<br>
+	<br>
+ 
+	<div id = "error" style = "position: relative; height : 20;width: 100; left: 120px;bottom: 20px;color:red">
+	
+	</div>
+
+
+        
+  </body>
+  	<script type="text/javascript">
+
+
+  	function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+		function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+		        
+		        reader.onload = function (e) {
+		            $('#img-upload').attr('src', e.target.result);
+		        }
+		         reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+
+
+		function delete_cookie( name ) {
+              document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function logout(){
+            console.log("cookie");
+            delete_cookie('user');
+            delete_cookie('item');
+            window.location.href = "http://localhost/wt/index.html"
+        }
+
+        itemId = readCookie('item');
+
+        $(document).ready(function(){
+
+
+        	user = readCookie('user');
+            console.log(user);
+            if(user){
+            $('#logout').css("display","");
+            $('#hey').css("display","");
+            $('#shopping').css("display","");
+
+            document.getElementById('hi').innerHTML += " "+user;
+            }
+            else{
+                $('#login').css("display","");
+                $('#signup').css("display","");
+            }
+        });
+	$(document).ready( function() {
+    	
+		$("#imgInp").change(function(){
+		    readURL(this);
+		}); 
+
+		var sub = document.getElementById("submit");
+		sub.onclick = checkAll;
+		var category1;
+		var colour1;
+		var size1;
+		var brand1;
+		var sex1;
+		var image1;
+		function checkAll()
+		{
+			var flag = 0;
+
+			var colours = document.getElementsByName("color");
+			for(var i = 0; i< colours.length; i++)
+			{
+				
+				if(colours[i].checked)
+				{
+					colour1 = colours[i].value;
+					flag = flag + 1;
+					break;
+				}
+				
+				
+			}
+			var condition = document.getElementsByName("condition");
+			for(var i = 0; i< condition.length; i++)
+			{
+				
+				if(condition[i].checked)
+				{
+					condition1 =  condition[i].value;
+					flag = flag + 1;
+					break;
+				}
+				
+				
+			}
+			var Categories = document.getElementsByName("cate");
+			for(var i = 0; i< Categories.length; i++)
+			{
+				
+				if(Categories[i].checked)
+				{
+					
+					category1 = Categories[i].value;
+					flag = flag +1;
+					break;
+				}
+			}
+			
+			
+			
+			var Size = document.getElementsByName("size");
+			for(var i = 0; i< Size.length; i++)
+			{
+				
+				if(Size[i].checked)
+				{
+					size1 = Size[i].value;
+					flag = flag +1;
+					break;
+				}
+			}
+			
+			x = document.getElementById("brandin");
+			if(x.value!= "")
+			{
+				brand1 = x.value
+				flag = flag +1;
+			}
+			
+			
+			var sex = document.getElementsByName("sex");
+			for(var i = 0; i< sex.length; i++)
+			{
+				
+				if(sex[i].checked)
+				{
+					sex1 = sex[i].value;
+					flag = flag +1;
+					break;
+				}
+			}
+
+
+			if(document.getElementById("imgInp").value != "") 
+			{
+				//image1 = document.getElementById("imgInp").value
+				image1 = document.getElementById("imgInp").files[0].name; 
+
+				flag = flag + 1;
+				
+			}
+
+			datefrom1 = document.getElementById('datefrom').value + " 00:00:00";
+			dateto1 = document.getElementById('dateto').value + " 00:00:00";
+			//alert(flag)
+			if(category1 == "T-shirt"){
+				basePrice1 = 50;
+				rate1 = 10;
+			}
+			else if(category1 == "Shirt"){
+				basePrice1 = 75;
+				rate1 = 15;
+			}
+			else if(category1 == "Dress"){
+				basePrice1 = 75;
+				rate1 = 15;
+			}
+			else if(category1 == "Jeans"){
+				basePrice1 = 50;
+				rate1 = 10;
+			}
+			else if(category1 == "Trouser"){
+				basePrice1 = 75;
+				rate1 = 15;
+			}
+			else if(category1 == "Blazer"){
+				basePrice1 = 100;
+				rate1 = 20;
+			}
+
+			item = image1.split(".");
+			item1 = item[0];
+
+			var username = readCookie('user');
+
+			if(flag < 6)
+			{
+				alert("Please enter all details.");				
+			}
+			else
+			{
+				obj = {"category": category1, "color": colour1, "size" : size1, "brand" : brand1, "sex" : sex1, "image" : image1 , "datefrom": datefrom1, "dateto" : dateto1, "basePrice" : basePrice1, "rate": rate1 , "itemID" : item1, "userID" : username,"cond":condition1, "status" : "A"};
+				console.log(obj);
+			}
+
+			$.ajax({
+				url: "http://localhost:3000/addItem",
+				data:obj,
+				type: "GET",
+				dataType: "json",
+				success: function(res){
+					if(res.status == "success"){
+						alert("Item Added");
+						window.location = "http://localhost/wt/index.html";
+					}
+				},
+				error:function(){
+					alert("Oops! Something went wrong.");
+				}
+
+			})
+
+			
+		}
+
+
+				
+	});
+	
+	
+	</script> 
+
+</html>

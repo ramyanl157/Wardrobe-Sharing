@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="jquery-3.1.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wardrobe Sharing</title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>  
+    <link href="assets/css/wow.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>     
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+
+    <script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+    <script type="text/javascript">
+            done = false;
+            window.onscroll = getContent;
+            function getContent(){
+                if(!done && document.body.scrollTop > 200){
+                    done = true;
+                    $.ajax({
+                        url:"priceTable.txt",
+                        type:"GET",
+                        async:false,
+                        cache:false,
+                        dataType:"text",
+                        crossDomain:true,
+                        success:function(res){
+                            document.getElementById('priceTable').src = res;
+                            
+                        }
+                    })
+                }
+            }
+
+
+            
+            function readCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+            $(document).ready(function(){
+                    user = readCookie('user');
+                    console.log(user);
+                    if(user){
+                    $('#logout').css("display","");
+                    $('#hey').css("display","");
+                    document.getElementById('hi').innerHTML += " "+user;
+                    }
+                    else{
+                        $('#login').css("display","");
+                        $('#signup').css("display","");
+                    }
+            })
+
+            function delete_cookie( name ) {
+                  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            }
+
+            function logout(){
+                console.log("cookie");
+                delete_cookie('user');
+                location.reload(true);
+            }
+
+            function checkLogin(page){
+                var user = readCookie('user');
+                if(user){
+                    if(page == 'rent')
+                        window.location.href = "rent.html";
+                    else if(page == 'borrow')
+                        window.location.href = "shop2.html";
+                }
+                else
+                    window.location.href = "login.html";
+            }
+
+            function tocart()
+            {
+                if(readCookie("user"))
+                {
+                    window.location = "cart.html";
+                }
+                else{
+                    window.location = "login.html"
+                }
+            }
+            
+    </script>
+  </head>
+
+
+  <body>
+
+    <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <img src = "assets/img/logo.png" class = "logo">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-xs hidden-sm" href="index.html"><img src = "assets/img/logo.png" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#home" class="smoothScroll">Home</a></li>
+                        <li> <a href="#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="#contact" class="smoothScroll"> Contact</a></li>
+                        <li> <a href="#" onclick = "tocart()">My Bag</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="display:none" id = "login" ><a href="login.html"  class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li style="display:none" id = "signup" ><a href="signup.html"  class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                        <li style="display:none" id = "hey"><a id = "hi" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Hey</a></li>
+                        <li style="display:none" id = "logout" onclick="logout()"><a class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Logout</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainbackground" id="home">
+        <div>
+            <h1>Share My Wardrobe</h1><hr>
+            <p>The New Way To Look Fab!!! <a style="text-decoration:none;color:white" href = "#services" class = "smoothScroll">Let's GO &rarr;</a> </p>
+        </div>       
+    </div>
+    
+
+    <div class="container" id="about">
+            <div class="row white">
+            <br>
+                <h1 class="centered">How This Works</h1>
+                <hr>
+                
+                <div class="col-lg-12 description">
+                    <p class = 'centered'>Select the dress style, delivery date & the number of days for which you want the outfit. Browse our collection, find that perfect dress & place your order. Receive the perfectly packaged, dry cleaned dress at your doorstep. Flaunt the outfit, look glam! Done with the outfit? Just fold up the dress in the return packaging and we'll schedule a free pick up and dry clean after your rental duration ends.
+
+                    <br> 
+                        <a class = "cta" href = "#" data-toggle="modal" data-target="#myModal">View Price Chart &rarr;</a></p>
+                    <br>
+
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">View Price Chart</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <img width = "800" height = "525" id = "priceTable" src = "">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+        <div id="grey">
+            <div id = "services">
+                <h1 class="centered">Jump Right In</h1>
+                    <hr><br>
+                <div class="row">
+                    <div class="col-md-6 callout">
+                        <span class="icon"><img class = "serviceimage" src = "assets/img/rent.png"></span>
+                        <h2><a class = "cta" onclick="checkLogin('rent')">Rent &rarr;</a></h2>
+                        <p>Haven't used that dress for a while? Or, don't fit into that dress you were recently gifted? Put it here and make some easy cash!</p>
+                    </div>
+                        
+                    <div class="col-md-6 callout">
+                        <span class="icon"><img class = "serviceimage" src = "assets/img/borrow.png"></span>
+                        <h2><a class = "cta" onclick="checkLogin('borrow')">Borrow &rarr;</a></h2>
+                        <p>Don't wanna spend a fortune on a new dress for a party? Borrow one from us! Cause You're Sexy And You Know It!!</p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="container">
+                <h4>Brought to you by - Hooga Booga</h4>
+            </div>
+        </div>
+  </body>
+</html>

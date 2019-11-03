@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    	.description{
+
+    	}
+    </style>
+
+    <title>Wardrobe Sharing</title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>  
+    <link href="assets/css/wow.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>     
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <script type="text/javascript" src="assets/js/smoothscroll.js"></script> 
+    <script type="text/javascript">
+
+
+    	   
+    		function readCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            // $("#dateto").datepicker({
+            //   onSelect: function(dateText) {
+            //     alert("HEllo");
+            //     var from = $('#datefrom').val();
+            //     var to = $('#dateto').val();
+            //     //display("Selected date: " + dateText + "; input's current value: " + this.value);
+            //     alert(to);
+            //   }
+            // });
+
+            function check(){
+                // window.alert('hello')
+                from = $('#datefrom').val();
+                to = $('#dateto').val();
+                fdate = new Date(from);
+                tdate  = new Date(to);
+                var a = DATEFROM.split("-");
+                day = a[1];
+                month = a[0] ;
+                year= a[2];
+                
+                newdate = day+"-"+month+"-"+year;
+
+                Fdate = new Date(newdate);
+                var a = DATETO.split("-");
+                day = a[1];
+                month = a[0];
+                year= a[2];
+                newdate1 = day+"-"+month+"-"+year;
+                Tdate = new Date(newdate1);
+               
+                if( ((Number(fdate) > Number(Fdate)) && (Number(tdate) < Number(Tdate))) && ((Number(fdate) < Number(tdate))) )
+                {
+                    money = parseInt(basePrice)+parseInt(rate)*(parseInt((new Date(to).getDate())) - parseInt((new Date(from)).getDate()));
+                    document.getElementById('price').innerHTML = money;
+                }
+                else{
+                    window.alert("Item Not Avaliable for requested Dates"); 
+                }
+                
+                
+                
+
+            }
+           
+            function delete_cookie( name ) {
+                  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            }
+
+            function logout(){
+                console.log("cookie");
+                delete_cookie('user');
+                delete_cookie('item');
+                window.location.href = "http://localhost/wt/index.html"
+            }
+
+            itemId = readCookie('item');
+
+            $(document).ready(function(){
+
+
+            	user = readCookie('user');
+                console.log(user);
+                if(user){
+                $('#logout').css("display","");
+                $('#hey').css("display","");
+                $('#shopping').css("display","");
+
+                document.getElementById('hi').innerHTML += " "+user;
+                }
+                else{
+                    $('#login').css("display","");
+                    $('#signup').css("display","");
+                }
+            	$.ajax({
+            	url: "http://localhost:3000/product",
+            	type:"GET",
+            	dataType:"json",
+            	data: {itemID:itemId},
+            	success: function(res){
+            		console.log(res);
+
+            		res = res[0];
+            		console.log(res.brand);
+            		imagesource = res.image; 
+                    itemId = res.itemID;
+                    rate = res.rate;
+            		// image.src = "/products/" + res.image;
+            		var condition = document.getElementById('condition');
+            		condition.innerHTML += "\t:\t" + res.cond;
+            		var brand = document.getElementById('brand');
+            		brand.innerHTML += "\t:\t" + res.brand;
+            		var base = document.getElementById('basePrice');
+                    basePrice = res.basePrice;
+            		base.innerHTML += '\t:\t &#8377 ' + res.basePrice +' WITH Rate &#8377 ' + res.rate + ' per day';
+            		var color = document.getElementById('color');
+            		color.innerHTML += "\t:\t" + res.color;
+            		var size = document.getElementById('size');
+            		size.innerHTML += "\t:\t" + res.size;
+            		var category = document.getElementById('category');
+            		category.innerHTML += "\t:\t" + res.category;
+            		var image = document.getElementById('product-image');
+            	    var owner = document.getElementById('owner')
+                    owner.innerHTML += '\t:\t' + res.userID
+                    var product = document.getElementById('product')
+                    product.innerHTML += res.itemID
+                    DATETO = res.dateto;
+                    DATEFROM = res.datefrom;
+                    var dates = document.getElementById('dates')
+                    dates.innerHTML += '\t:\t' + res.datefrom + " - " + res.dateto;
+                    setTimeout("loadimage()", 3000);
+            		// image.src = "/products/" + res.image;
+
+
+            	},
+            	error: function(jqXHR,textStatus,errorThrown ){
+	                console.log(jqXHR);
+	                console.log(textStatus);
+	                console.log(errorThrown);
+	                console.log("Sorry! Something went wrong. Try Again!");
+	            	}
+	            })
+            })
+
+            function cont(){
+                window.location = "http://localhost/wt/shop2.html";
+            }
+
+            function cart(){
+                // var date = fdate.getDate()+"-"+fdate.getMonth()+"-" + fdate.getFullYear() +" to " + tdate.getDate() +"-"+tdate.getMonth()+"-" + tdate.getFullYear();
+                var dt = from + "<br>" + to;
+                localStorage.setItem('hoogabooga_' + itemId, itemId + "," + dt + "," + money );
+                alert("Product has been added to your cart!");
+            }
+
+            function checkout(){
+                window.location = "http://localhost/wt/cart.html"
+            }
+
+			function loadimage()
+			{
+				document.getElementById('product-image').src = "products/" + imagesource;
+                $('#imagediv').css('border','1px solid')
+			}       
+            
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div id="navbar-main">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style = "background-color:transparent">
+                    <img src = "assets/img/logo.png" class = "logo1">
+                  </button>
+                  
+                  <a class="navbar-brand hidden-xs hidden-sm" href="index.html"><img src = "assets/img/logo.png" class = "logo"></a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://localhost/wt/index.html" class="smoothScroll">Home</a></li>
+                        <li> <a href="http://localhost/wt/index.html#about" class="smoothScroll"> About</a></li>
+                        <li> <a href="http://localhost/wt/index.html#services" class="smoothScroll"> Services</a></li>
+                        <li> <a href="http://localhost/wt/index.html#contact" class="smoothScroll"> Contact</a></li>
+                        <li><a href="cart.html">My Bag</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="display:none" id = "login" ><a href="login.html"  class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Login</a></li>
+                        <li style="display:none" id = "signup" ><a href="signup.html"  class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Signup</a></li>
+                        <li style="display:none" id = "hey"><a id = "hi" class="smoothScroll"><span class="icon icon-plus-circle" style="font-size:15px;"> &nbsp</span> Hey</a></li>
+                        <li style="display:none" id = "logout" onclick="logout()"><a class="smoothScroll"><span class="icon icon-signup" style="font-size:15px;">&nbsp</span>Logout</a></li>
+                        <li style="display:none" id = "shopping"><i class="fa fa-shopping-bag" aria-hidden="true"></i><a id = "bag" class="smoothScroll"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+	
+	
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="container">
+				
+				<div class = "row">
+				
+					<div id = "imagediv" class= "col-sm-6 col-xs-8" style = "margin-top: 5%;padding-bottom: 3%;padding-top:2%; padding-left:-3%;padding-right:-3%" >
+					
+						<center><img src = "squares.gif" class = "img-responsive" id = "product-image"></center>
+					
+					</div>
+					<div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Cart</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <label>Choose the dates: &nbsp</label>From:<input type="date" id='datefrom' name="datefrom">
+                                    To:<input type="date" id='dateto' name="dateto">
+                                    <br>
+                                    <label>Price</label> <p id = "price"></p>  
+                                    
+                                    <button type="button" class="btn btn-default" onclick ="check()" id = "check" >Check</button> 
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick ="cart()" id = "cart" >Add</button> 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class = "col-sm-6 col-xs-6" style = "margin-top: 100px">
+						<table class = "table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th id = "product">
+                                            Product ID : 4500hb12
+                                        </th>
+                                    </tr>
+                                </thead>
+									<tbody>
+							      <tr>
+							        <td id = 'category' >
+									Category
+									</td>
+							      </tr>
+							      <tr>
+							        <td id = 'brand' >
+									Brand
+									</td>
+							      </tr>
+							      <tr>
+							        <td id = 'color' >
+									Color
+									</td>
+							      </tr>
+							      <tr>
+							        <td id = 'size' >
+									Size
+									</td>
+							      </tr>
+							      <tr>
+							        <td id = 'condition' >
+									Product Condition
+									</td>
+							      </tr>
+							      <tr>
+							        <td id = 'basePrice' >
+									Base Price
+									</td>
+							      </tr>
+                                  <tr>
+                                    <td id = 'owner' >
+                                    Owner ID
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td id = "dates">
+                                        Avaliable Dates
+                                    <td>
+                                  </tr>
+							    </tbody>
+								
+						</table>
+						<!-- </div> -->
+
+                        <button type="button" onclick="cont()" class="btn btn-default">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                        </button>
+                        
+                        <button type="button" onclick = "checkout()" class="btn btn-success">
+                            Checkout <span class="glyphicon glyphicon-play"></span>
+                        </button>
+
+						<a href="#"  data-toggle = "modal" data-target='#myModal' class="btn btn-danger add-to-cart" ><i class="fa fa-shopping-cart">&nbsp</i>Add to cart</a>
+                        
+					</div>
+
+				
+				</div>
+				
+	</div>
+		
+			
+    
+	<br>
+	<br>
+ 
+
+
+
+        
+  </body>
+ 
+
+</html>
